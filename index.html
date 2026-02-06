@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ANIMORPFP — profile morph</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖼</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <img src="/title.png" alt="ANIMORPFP" class="title-img" />
+      <p class="tagline">want to change your profile picture but don't want to confuse your followers? morph through a series of transition photos.</p>
+    </header>
+
+    <div class="horse-mode-wrap" id="horseModeWrap">
+      <span class="horse-mode-title">horse mode</span>
+      <label class="horse-mode-pill">
+        <input type="checkbox" id="horseMode" aria-label="Horse mode" />
+        <span class="horse-slider" aria-hidden="true"></span>
+        <span class="horse-seg horse-off">off</span>
+        <span class="horse-seg horse-on">on</span>
+      </label>
+    </div>
+
+    <section class="uploads">
+      <label class="upload-card" data-side="A">
+        <span class="upload-square">
+          <input type="file" accept="image/*" aria-label="Starting photo" />
+          <img class="example" src="/start-example.jpg" alt="" />
+          <img class="preview" alt="" />
+          <img class="upload-icon" src="/upload.svg" alt="" aria-hidden="true" />
+        </span>
+        <span class="upload-label">starting photo</span>
+      </label>
+      <label class="upload-card" data-side="B">
+        <span class="upload-square">
+          <input type="file" accept="image/*" aria-label="Ending photo" />
+          <img class="example" src="/end-example.jpg" alt="" />
+          <img class="preview" alt="" />
+          <img class="upload-icon" src="/upload.svg" alt="" aria-hidden="true" />
+        </span>
+        <span class="upload-label">ending photo</span>
+      </label>
+    </section>
+
+    <p class="upload-hint">works best with a close-up, front-facing face</p>
+
+    <section class="morph-section" hidden>
+      <div class="canvas-wrap">
+        <canvas id="morphCanvas"></canvas>
+      </div>
+      <div class="controls">
+        <input type="range" id="morphSlider" min="0" max="100" value="0" aria-label="Morph amount" />
+        <span id="morphPercent">0%</span>
+      </div>
+      <div class="week-placeholders">
+        <div class="week-item"><div class="week-box"><canvas class="week-canvas" data-t="0.15" width="150" height="150"></canvas></div><span class="week-label">week 1</span></div>
+        <div class="week-item"><div class="week-box"><canvas class="week-canvas" data-t="0.25" width="150" height="150"></canvas></div><span class="week-label">week 2</span></div>
+        <div class="week-item"><div class="week-box"><canvas class="week-canvas" data-t="0.45" data-t-horse="0.67" width="150" height="150"></canvas></div><span class="week-label">week 3</span></div>
+        <div class="week-item"><div class="week-box"><canvas class="week-canvas" data-t="0.75" data-t-horse="0.80" width="150" height="150"></canvas></div><span class="week-label">week 4</span></div>
+      </div>
+      <button type="button" class="download-weeks-btn" id="btnDownloadWeeks">Save</button>
+    </section>
+
+    <section class="explanation">
+      <section class="explanation-block">
+        <h2 class="explanation-header"><img src="/why.png" alt="Why?" /></h2>
+        <div class="explanation-body">
+          <p>AnimorPFP is a cultural critique of the fragility of one’s online identity, the inherent impermanence in a digital ecosystem in which the inhabitants are intangible.</p>
+          <p>We increasingly live our lives online, where our presence is represented by a static image, carefully curated to control how we are perceived. Making it jarring for that identity, that single image that represents the totality of an individual, to switch unexpectedly. It’s striking, the lack of object permanence in the digital sphere, as if we are once again infants, confounded by peek-a-boo.</p>
+          <p>So we must ask: In this era of tech, in a life lived online, what does identity entail? What does it mane to exist online? If one’s digital persona is masked with horse, if one’s visage is more strongly and more often associated with horse than one’s own face, then what separates mankind from equine?</p>
+          <p>My thoughts on this matter are too profound to be illustrated by prose alone, so I have prepared a poem:</p>
+          <p class="explanation-poem">There once was a fella named Harold<br>He planned to change his PFP but was imperiled<br>For it defined his identity<br>Without it, he felt a non-entity<br>A neighsayer might even claim he was Gerald!</p>
+          <p>If you read this far then you probably like to read, in which case you should read my substack, <a href="https://rawandferal.substack.com/">raw &amp; feral</a>.</p>
+        </div>
+      </section>
+      <section class="explanation-block">
+        <h2 class="explanation-header"><img src="/how.png" alt="How?" /></h2>
+        <div class="explanation-body">
+          <p>Why, with the beauty of mathematics, of course!</p>
+          <p>First, we need to understand what the faces in the start and end images look like, so we map facial features across 468 points (using MediaPipe Face Landmarker). Then, these points are used as references for dividing the face into a series of triangles (Delaunay triangulation). We compare the positions of the triangles in the start image to those in the end image, and as the slider moves along, the triangles warp to the end positions, while fading in the colors of the end image (via WebGL).</p>
+        </div>
+      </section>
+    </section>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
