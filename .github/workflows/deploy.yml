@@ -31,9 +31,9 @@ jobs:
 
       - name: Build
         env:
-          BASE_PATH: "/${{ github.event.repository.name }}/"
+          BASE_PATH: "/"
         run: |
-          echo "Building with BASE_PATH=$BASE_PATH"
+          echo "Building with BASE_PATH=$BASE_PATH (for custom domain root)"
           npm run build
 
       - name: Upload artifact
