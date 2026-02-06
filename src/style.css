@@ -253,6 +253,16 @@ section.uploads {
   text-align: center;
 }
 
+.upload-error {
+  display: block;
+  margin-top: 0;
+  min-height: 1.2em;
+  color: #e74c3c;
+  font-size: 0.85rem;
+  font-family: var(--font-body);
+  text-align: center;
+}
+
 .upload-hint {
   margin: 0;
   font-size: 0.9rem;

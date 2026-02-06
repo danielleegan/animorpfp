@@ -30,6 +30,14 @@ let horseMode = false;
 
 function setStatus(_msg) {}
 
+function setCardError(side, message) {
+  const card = document.querySelector(`.upload-card[data-side="${side}"]`);
+  if (!card) return;
+  const el = card.querySelector('.upload-error');
+  if (!el) return;
+  el.textContent = message || '';
+}
+
 function loadImage(file) {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -94,8 +102,15 @@ function faceCenterCropZoomToFill(canvas, ctx, img, points, size, cropFactor = 0
 async function loadSide(side, file) {
   const card = document.querySelector(`.upload-card[data-side="${side}"]`);
   if (!file) return;
+  setCardError(side, '');
   setStatus('Loading image…');
-  const img = await loadImage(file);
+  let img;
+  try {
+    img = await loadImage(file);
+  } catch {
+    setCardError(side, 'face not detected');
+    return null;
+  }
   URL.revokeObjectURL(img.src);
 
   const dim = Math.min(img.naturalWidth, img.naturalHeight);
@@ -121,7 +136,8 @@ async function loadSide(side, file) {
   setStatus('Detecting face…');
   let points = getLandmarks(landmarker, scaledImg);
   if (!points) {
-    setStatus('Face not detected.');
+    setCardError(side, 'face not detected');
+    setStatus('face not detected.');
     return null;
   }
 
@@ -140,12 +156,14 @@ async function loadSide(side, file) {
     });
     points = getLandmarks(landmarker, scaledImg);
     if (!points) {
-      setStatus('Face not detected.');
+      setCardError(side, 'face not detected');
+      setStatus('face not detected.');
       return null;
     }
   }
 
   const { points: ptsWithCorners, triangles: tri } = triangulate(points, SIZE, SIZE);
+  setCardError(side, '');
   card.classList.remove('default-image');
   card.removeAttribute('data-default-image');
   card.classList.add('has-image');
@@ -321,15 +339,23 @@ document.querySelectorAll('.upload-card input[type="file"]').forEach((input) => 
     const file = e.target.files?.[0];
     const side = input.closest('.upload-card')?.dataset?.side;
     if (!file || !side) return;
-    await loadSide(side, file);
+    try {
+      await loadSide(side, file);
+    } catch {
+      setCardError(side, 'face not detected');
+    }
   });
 });
 
 async function loadSideFromUrl(side, url, filename) {
-  const res = await fetch(url);
-  const blob = await res.blob();
-  const file = new File([blob], filename, { type: blob.type });
-  await loadSide(side, file);
+  try {
+    const res = await fetch(url);
+    const blob = await res.blob();
+    const file = new File([blob], filename, { type: blob.type });
+    await loadSide(side, file);
+  } catch {
+    setCardError(side, 'face not detected');
+  }
 }
 
 setStatus('Loading default photos…');
