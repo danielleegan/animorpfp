@@ -51,7 +51,7 @@ function loadImageFromUrl(url) {
 
 async function loadHorseImage() {
   if (horseImg) return horseImg;
-  const img = await loadImageFromUrl('/horse.png');
+  const img = await loadImageFromUrl(`${import.meta.env.BASE_URL}horse.png`);
   const dim = Math.min(img.naturalWidth, img.naturalHeight);
   const sx = document.createElement('canvas');
   sx.width = SIZE;
