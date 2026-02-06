@@ -35,7 +35,7 @@ jobs:
           BASE_PATH: /${{ github.event.repository.name }}/
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: dist
 
