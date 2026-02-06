@@ -1,8 +1,6 @@
 import { initFaceLandmarker, getLandmarks } from './faceLandmarks.js';
 import { triangulate } from './triangulate.js';
 import { renderMorph, renderHorseMorph } from './morph.js';
-import JSZip from 'jszip';
-
 const SIZE = 512;
 
 const morphSection = document.querySelector('.morph-section');
@@ -299,17 +297,15 @@ document.getElementById('btnDownloadWeeks')?.addEventListener('click', async () 
     const blob = await new Promise((resolve) => out.toBlob((b) => resolve(b), 'image/png'));
     if (blob) blobs[i] = blob;
   }
-  const zip = new JSZip();
   blobs.forEach((blob, i) => {
-    if (blob) zip.file(`week${i + 1}.png`, blob);
+    if (!blob) return;
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `week${i + 1}.png`;
+    a.click();
+    URL.revokeObjectURL(url);
   });
-  const zipBlob = await zip.generateAsync({ type: 'blob' });
-  const url = URL.createObjectURL(zipBlob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'animorPFP.zip';
-  a.click();
-  URL.revokeObjectURL(url);
 });
 
 horseModeCheckbox.addEventListener('change', async () => {
