@@ -244,7 +244,7 @@ function redraw() {
 
 morphSlider.addEventListener('input', redraw);
 
-const DOWNLOAD_SIZE = 300; // 1/2 of previous (2x display size 150)
+const DOWNLOAD_SIZE = SIZE; // full resolution (512×512)
 
 document.getElementById('btnDownloadWeeks')?.addEventListener('click', async () => {
   const canDrawWeeks = (horseMode && dataA && dataB && horseImg && trianglesSource) || (dataA && dataB && triangles);
