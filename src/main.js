@@ -165,6 +165,9 @@ async function loadSide(side, file) {
   card.classList.remove('default-image');
   card.removeAttribute('data-default-image');
   card.classList.add('has-image');
+  if (window.posthog) {
+    window.posthog.capture('photo_uploaded', { side: side === 'A' ? 'starting' : 'ending' });
+  }
   const isDefault = file.name === 'start-example.jpg' || file.name === 'end-example.jpg';
   if (isDefault) {
     card.classList.add('default-image');
@@ -259,6 +262,9 @@ function redraw() {
 }
 
 morphSlider.addEventListener('input', redraw);
+morphSlider.addEventListener('change', () => {
+  if (window.posthog) window.posthog.capture('slider_used');
+});
 
 const DOWNLOAD_SIZE = SIZE; // full resolution (512×512)
 
@@ -306,6 +312,7 @@ document.getElementById('btnDownloadWeeks')?.addEventListener('click', async () 
     a.click();
     URL.revokeObjectURL(url);
   });
+  if (window.posthog) window.posthog.capture('images_saved', { count: blobs.filter(Boolean).length });
 });
 
 horseModeCheckbox.addEventListener('change', async () => {
